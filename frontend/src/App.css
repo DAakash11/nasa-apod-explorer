@@ -5,38 +5,135 @@
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
 .card {
   padding: 2em;
 }
 
 .read-the-docs {
   color: #888;
+}
+
+.container {
+  max-width: 800px;
+  margin: auto;
+  padding: 1.5rem;
+}
+
+.heading {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.random-section,
+.range-buttons,
+.datepicker-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* 👈 centers content horizontally */
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.random-section,
+.range-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.random-section label {
+  font-weight: 500;
+}
+
+.random-input {
+  margin-left: 0.5rem;
+  width: 60px;
+  padding: 0.3rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.button-primary {
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.button-success {
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.button-info {
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  background-color: #17a2b8;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.datepicker-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.datepicker-input-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;  /* 👈 also center input group */
+  gap: 1rem;
+}
+
+.datepicker-label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.datepicker-input {
+  margin-top: 0.25rem;
+  padding: 0.4rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  max-width: 200px;
+  min-width: 160px;
+}
+
+.datepicker-button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.apod-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 600px) {
+  .apod-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 1000px) {
+  .apod-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
 }

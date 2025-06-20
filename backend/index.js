@@ -6,21 +6,26 @@ require('dotenv').config();
 const app = express();
 app.use(cors());
 
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 
 app.get('/api/apod', async (req, res) => {
-  const { date } = req.query;
-  console.log('Received date from frontend:', date); // 👈 Add this line
+  const { date, start_date, end_date, count } = req.query;
+  console.log('Query received:', req.query);
   const baseUrl = `https://api.nasa.gov/planetary/apod`;
   
   try {
     const response = await axios.get(baseUrl, {
       params: {
         api_key: process.env.NASA_API_KEY,
-        ...(date && { date }) 
+        ...(count && { count }),
+        ...(date && { date }),
+        ...(start_date && { start_date }),
+        ...(end_date && { end_date })
       },
       timeout: 5000,
     });
+
+    console.log('APOD dates returned:', response.data.map(item => item.date));
 
     res.json(response.data);
   } catch (error) {

@@ -66,3 +66,12 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+body.dark {
+  background-color: #121212;
+  color: #f2f2f2;
+}
+
+body.dark img {
+  border: 1px solid #444;
+}

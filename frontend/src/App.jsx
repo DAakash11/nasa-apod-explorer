@@ -3,46 +3,120 @@ import axios from 'axios';
 import DatePicker from './components/DatePicker';
 import APODViewer from './components/APODViewer';
 import Loader from './components/Loader';
+import './App.css';
 
 function App() {
-  const [apod, setApod] = useState(null);
-  const [date, setDate] = useState('');
-  const [loading, setLoading] = useState(false);
+  const getToday = () => {
+    return new Date().toISOString().split('T')[0];
+  };
 
-  const fetchAPOD = async (queryDate = '') => {
+  const getDaysAgo = (numDays) => {
+    const d = new Date();
+    d.setDate(d.getDate() - numDays);
+    return d.toISOString().split('T')[0];
+  };
+
+  const getStartOfMonth = () => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-01`;
+  };
+
+  const [apods, setApods] = useState([]);
+  const [startDate, setStartDate] = useState(getToday());
+  const [endDate, setEndDate] = useState(getToday());
+  const [loading, setLoading] = useState(false);
+  const [count, setCount] = useState(5); // default random count
+  const [darkMode, setDarkMode] = useState(false);
+
+  const fetchRange = async (rangeStart = startDate, rangeEnd = endDate) => {
+    if (!rangeStart || !rangeEnd || rangeStart > rangeEnd) {
+      alert('Please enter a valid date range.');
+      return;
+    }
+
     try {
       setLoading(true);
       const res = await axios.get('/api/apod', {
-      params: queryDate ? { date: queryDate } : {}
-    });
-    console.log('Submitting date:', date);
-    setApod(res.data);
+        params: {
+          start_date: rangeStart,
+          end_date: rangeEnd
+        }
+      });
+      setApods(Array.isArray(res.data) ? res.data : [res.data]); // handle both single and multiple
     } catch (err) {
-      console.error(err);
-      setApod(null);
+      console.error('Range fetch error:', err);
+      setApods([]);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchAPOD(); // Fetch today's APOD on load
+    fetchRange(); // fetches default range
   }, []);
 
-  const handleSubmit = () => {
-    if (date) fetchAPOD(date);
-  };
-
   return (
-    <div style={{ maxWidth: '800px', margin: 'auto', padding: '1rem' }}>
-      <h1>NASA APOD Explorer</h1>
-      <DatePicker date={date} setDate={setDate} onSubmit={handleSubmit} />
+    <div className="container">
+      <h1 className="heading">NASA APOD Explorer</h1>
+      <div className="random-section">
+        <label>
+          Random Count:
+          <input
+            type="number"
+            min="1"
+            max="100"
+            value={count}
+            onChange={(e) => setCount(e.target.value)}
+            className="random-input"
+          />
+        </label>
+        <button
+          className="button-primary"
+          onClick={async () => {
+            try {
+              setLoading(true);
+              const res = await axios.get('/api/apod', {
+                params: { count } // ✅ must be here
+              });
+              setApods(Array.isArray(res.data) ? res.data : [res.data]);
+              console.log('Sending count:', count);
+            } catch (err) {
+              console.error('Random count fetch error:', err);
+              setApods([]);
+            } finally {
+              setLoading(false);
+            }
+          }}
+        >
+          🎲 Fetch Random
+        </button>
+      </div>
+
+      <DatePicker
+        startDate={startDate}
+        setStartDate={setStartDate}
+        endDate={endDate}
+        setEndDate={setEndDate}
+        onSubmit={fetchRange}
+      />
+
       {loading ? (
         <Loader />
-      ) : apod ? (
-        <APODViewer apod={apod} />
+      ) : Array.isArray(apods) && apods.length > 0 ? (
+        <div
+          style={{
+            display: 'grid',
+            gap: '1rem',
+            gridTemplateColumns: '1fr',
+          }}
+          className="apod-grid"
+        >
+          {apods.slice().reverse().map((apod) => (
+            <APODViewer key={apod.date} apod={apod} isToday={apod.date === getToday()} />
+          ))}
+        </div>
       ) : (
-        <p>No APOD data available.</p>
+        <p>No data to display</p>
       )}
     </div>
   );
