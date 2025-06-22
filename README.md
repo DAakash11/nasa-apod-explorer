@@ -23,7 +23,7 @@ How to Run Locally
 
 1. Clone the Repository
 
-git clone https://github.com/your-username/nasa-apod-explorer.git
+git clone https://github.com/DAakash11/nasa-apod-explorer.git
 cd nasa-apod-explorer
 
 2. Backend Setup
@@ -40,7 +40,7 @@ node index.js
 
 This starts the backend at:
 
-http://ipishere:5000/api/apod
+http://51.104.6.37:5000/api/apod
 
 3. Frontend Setup
 
@@ -53,8 +53,8 @@ App runs on:
 http://localhost:5173
 
 🌐 Live Demo
-Frontend URL: http://ipishere:5173
-Backend API: http://ipishere:5000/api/apod
+Frontend URL: http://51.104.6.37:5173
+Backend API: http://51.104.6.37:5000/api/apod
 
 🤝 Acknowledgements
 NASA Open APIs

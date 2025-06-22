@@ -10,23 +10,11 @@ function App() {
     return new Date().toISOString().split('T')[0];
   };
 
-  const getDaysAgo = (numDays) => {
-    const d = new Date();
-    d.setDate(d.getDate() - numDays);
-    return d.toISOString().split('T')[0];
-  };
-
-  const getStartOfMonth = () => {
-    const d = new Date();
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-01`;
-  };
-
   const [apods, setApods] = useState([]);
   const [startDate, setStartDate] = useState(getToday());
   const [endDate, setEndDate] = useState(getToday());
   const [loading, setLoading] = useState(false);
   const [count, setCount] = useState(5); // default random count
-  const [darkMode, setDarkMode] = useState(false);
 
   const fetchRange = async (rangeStart = startDate, rangeEnd = endDate) => {
     if (!rangeStart || !rangeEnd || rangeStart > rangeEnd) {
