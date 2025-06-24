@@ -1,36 +1,33 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import DatePicker from './components/DatePicker';
 import APODViewer from './components/APODViewer';
 import Loader from './components/Loader';
-import './App.css';
+import "./App.css";
 
 function App() {
-  const getToday = () => {
-    return new Date().toISOString().split('T')[0];
-  };
+  const getToday = () => new Date().toISOString().split('T')[0];
 
-  const [apods, setApods] = useState([]);
   const [startDate, setStartDate] = useState(getToday());
   const [endDate, setEndDate] = useState(getToday());
+  const [count, setCount] = useState(5);
+  const [apods, setApods] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [count, setCount] = useState(5); // default random count
 
+  axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
+  
   const fetchRange = async (rangeStart = startDate, rangeEnd = endDate) => {
     if (!rangeStart || !rangeEnd || rangeStart > rangeEnd) {
       alert('Please enter a valid date range.');
       return;
     }
-
+    
     try {
       setLoading(true);
       const res = await axios.get('/api/apod', {
-        params: {
-          start_date: rangeStart,
-          end_date: rangeEnd
-        }
+        params: { start_date: rangeStart, end_date: rangeEnd },
       });
-      setApods(Array.isArray(res.data) ? res.data : [res.data]); // handle both single and multiple
+      setApods(Array.isArray(res.data) ? res.data : [res.data]);
     } catch (err) {
       console.error('Range fetch error:', err);
       setApods([]);
@@ -39,47 +36,30 @@ function App() {
     }
   };
 
+  const fetchRandom = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get('/api/apod', {
+        params: { count },
+      });
+      setApods(Array.isArray(res.data) ? res.data : [res.data]);
+    } catch (err) {
+      console.error('Random count fetch error:', err);
+      setApods([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    fetchRange(); // fetches default range
+    fetchRange(getToday(), getToday());
   }, []);
 
   return (
     <div className="container">
       <h1 className="heading">NASA APOD Explorer</h1>
-      <div className="random-section">
-        <label>
-          Random Count:
-          <input
-            type="number"
-            min="1"
-            max="100"
-            value={count}
-            onChange={(e) => setCount(e.target.value)}
-            className="random-input"
-          />
-        </label>
-        <button
-          className="button-primary"
-          onClick={async () => {
-            try {
-              setLoading(true);
-              const res = await axios.get('/api/apod', {
-                params: { count } // ✅ must be here
-              });
-              setApods(Array.isArray(res.data) ? res.data : [res.data]);
-              console.log('Sending count:', count);
-            } catch (err) {
-              console.error('Random count fetch error:', err);
-              setApods([]);
-            } finally {
-              setLoading(false);
-            }
-          }}
-        >
-          🎲 Fetch Random
-        </button>
-      </div>
 
+      {/* Date Range Picker */}
       <DatePicker
         startDate={startDate}
         setStartDate={setStartDate}
@@ -88,6 +68,23 @@ function App() {
         onSubmit={fetchRange}
       />
 
+      {/* Random Fetch */}
+      <div style={{ marginTop: '1rem' }}>
+        <label>
+          🎲 Random Count:&nbsp;
+          <input
+            type="number"
+            min="1"
+            max="100"
+            value={count}
+            onChange={(e) => setCount(e.target.value)}
+            style={{ width: '60px' }}
+          />
+        </label>
+        <button onClick={fetchRandom} style={{ marginLeft: '0.5rem' }}>🎲 Fetch Random</button>
+      </div>
+
+      {/* Results */}
       {loading ? (
         <Loader />
       ) : Array.isArray(apods) && apods.length > 0 ? (

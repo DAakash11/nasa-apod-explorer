@@ -24,9 +24,10 @@ app.get('/api/apod', async (req, res) => {
       },
       timeout: 5000,
     });
-
-    console.log('APOD dates returned:', response.data.map(item => item.date));
-
+    if (Array.isArray(response.data))
+      console.log('APOD dates returned:', response.data.map(item => item.date));
+    else
+      console.log('APOD date returned:', response.data.date);
     res.json(response.data);
   } catch (error) {
     console.error('Error fetching APOD:', error?.response?.status, error.message);
@@ -40,7 +41,7 @@ app.get('/api/apod', async (req, res) => {
     } else {
       res.status(500).json({ error: 'Something went wrong with NASA API' });
     }
- }
+  }
 });
 
 app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
