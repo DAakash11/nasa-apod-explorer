@@ -40,7 +40,7 @@ node index.js
 
 This starts the backend at:
 
-http://51.104.6.37:5000/api/apod
+http://localhost:5000/api/apod
 
 3. Frontend Setup
 
@@ -53,7 +53,7 @@ App runs on:
 http://localhost:5173
 
 🌐 Live Demo
-Frontend URL: http://51.104.6.37:5173
+Frontend URL: http://51.104.6.37
 Backend API: http://51.104.6.37:5000/api/apod
 
 🤝 Acknowledgements
