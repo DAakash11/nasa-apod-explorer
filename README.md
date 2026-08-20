@@ -52,10 +52,6 @@ App runs on:
 
 http://localhost:5173
 
-🌐 Live Demo
-Frontend URL: http://51.104.6.37
-Backend API: http://51.104.6.37:5000/api/apod
-
 🤝 Acknowledgements
 NASA Open APIs
 Vite
